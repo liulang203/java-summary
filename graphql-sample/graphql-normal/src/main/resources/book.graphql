@@ -1,0 +1,23 @@
+schema {
+    query: BookQuery
+}
+
+type BookQuery {
+    findOneBook(id : Long) : Book
+    searchBook(name: String!): [Book]
+}
+
+type Book {
+    id: Long!
+    name: String!
+    price: Long
+    authors: [Author]!
+}
+
+type Author {
+    id: Long!
+    name: String!
+    birthday: LocalDate
+    friends: [Author]
+    books: [Book]!
+}
