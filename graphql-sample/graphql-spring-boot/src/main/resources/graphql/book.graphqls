@@ -1,0 +1,32 @@
+type Book {
+    id: ID!
+    name: String!
+    price: Long!
+    author: Author
+}
+
+type Author {
+    id: ID!
+    name: String!
+    birthday: LocalDate
+    books: [Book]!
+}
+
+# The Root Query for the application
+type Query {
+    recentBooks(count: Int, offset: Int): [Book]!
+}
+
+input InputBook{
+    id: ID
+    name: String!
+    price: Long!
+    authorId: Long
+}
+
+# The Root Mutation for the application
+type Mutation {
+    writeAuthor(id: Long, name: String!, birthday: LocalDate) : Author!
+    writeBook(id: Long, name: String!, price: Long, authorId: Long) : Book!
+    newBook(book: InputBook!) : Book!
+}

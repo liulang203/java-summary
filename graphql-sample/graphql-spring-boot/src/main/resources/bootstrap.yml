@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: graphql-spring-boot
+
+server:
+  port: 8080
+
+graphiql:
+  enabled: true
+
+graphql:
+  servlet:
+    enabled: true
+
+
+
