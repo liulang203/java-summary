@@ -25,7 +25,7 @@ public class SchemaGraphQL {
     public GraphQLSchema bookSchema() throws IOException {
         DateScalars.initScalars();
 
-        Reader file = new InputStreamReader(String.class.getClassLoader().getResource("book.graphql").openStream(), "UTF-8");
+        Reader file = new InputStreamReader(SchemaGraphQL.class.getClassLoader().getResource("book.graphql").openStream(), "UTF-8");
 
         SchemaParser schemaParser = new SchemaParser();
         TypeDefinitionRegistry typeDefinitionRegistry = schemaParser.parse(file);

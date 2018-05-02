@@ -1,8 +1,10 @@
 package com.ddnet.graphql.normal;
 
 import com.ddnet.graphql.normal.datetime.DateScalars;
+import com.ddnet.graphql.normal.entity.Book;
 import com.ddnet.graphql.normal.query.BookMutation;
 import com.ddnet.graphql.normal.query.BookQuery;
+import com.ddnet.graphql.normal.repository.BookRepository;
 import graphql.ExecutionInput;
 import graphql.ExecutionResult;
 import graphql.GraphQL;
@@ -22,7 +24,8 @@ public class NormalGraphQL {
                 .field(GraphQLFieldDefinition.newFieldDefinition().name("id").type(Scalars.GraphQLLong).build())
                 .field(GraphQLFieldDefinition.newFieldDefinition().name("name").type(Scalars.GraphQLString).build())
                 .field(GraphQLFieldDefinition.newFieldDefinition().name("price").type(Scalars.GraphQLLong).build())
-                .field(GraphQLFieldDefinition.newFieldDefinition().name("authors").type(new GraphQLList(new GraphQLTypeReference("Author"))).build()).build();
+                .field(GraphQLFieldDefinition.newFieldDefinition().name("authors").type(new GraphQLList(new GraphQLTypeReference("Author"))).build())
+                .build();
 
         GraphQLObjectType authorType = GraphQLObjectType.newObject().name("Author")
                 .field(GraphQLFieldDefinition.newFieldDefinition().name("id").type(Scalars.GraphQLLong).build())
@@ -31,7 +34,7 @@ public class NormalGraphQL {
                 .field(GraphQLFieldDefinition.newFieldDefinition().name("friends").type(new GraphQLList(new GraphQLTypeReference("Author"))).build())
                 .field(GraphQLFieldDefinition.newFieldDefinition().name("books").type(new GraphQLList(new GraphQLTypeReference("Book"))).build()).build();
 
-        GraphQLInputObjectType bookInput = GraphQLInputObjectType.newInputObject().name("Book")
+        GraphQLInputObjectType bookInput = GraphQLInputObjectType.newInputObject().name("InputBook")
                 .field(GraphQLInputObjectField.newInputObjectField().name("id").type(Scalars.GraphQLLong).build())
                 .field(GraphQLInputObjectField.newInputObjectField().name("name").type(Scalars.GraphQLString).build())
                 .field(GraphQLInputObjectField.newInputObjectField().name("price").type(Scalars.GraphQLLong).build())
@@ -54,15 +57,15 @@ public class NormalGraphQL {
                                 .argument(GraphQLArgument.newArgument().name("name").type(Scalars.GraphQLString).defaultValue(""))
                                 .dataFetcher(environment -> BookQuery.searchBook(environment, environment.getArgument("name"))))
                 )
-                .mutation(GraphQLObjectType.newObject().name("mutation")
+                .mutation(GraphQLObjectType.newObject().name("BookMutation")
                         .field(GraphQLFieldDefinition.newFieldDefinition().name("insertBook")
-                                .argument(GraphQLArgument.newArgument().name("book").type(new GraphQLTypeReference("Book")).defaultValue(null))
                                 .type(new GraphQLTypeReference("Book"))
-                                .dataFetcher(environment -> BookMutation.insertBook(environment, environment.getArgument("id"))))
+                                .argument(GraphQLArgument.newArgument().name("book").type(new GraphQLTypeReference("InputBook")))
+                                .dataFetcher(environment -> new BookRepository().createBook(Book.fromMap(environment.getArgument("book")))))
                         .field(GraphQLFieldDefinition.newFieldDefinition().name("updateBook")
                                 .type(new GraphQLTypeReference("Book"))
-                                .argument(GraphQLArgument.newArgument().name("book").type(new GraphQLTypeReference("Book")).defaultValue(null))
-                                .dataFetcher(environment -> BookMutation.updateBook(environment, environment.getArgument("name"))))
+                                .argument(GraphQLArgument.newArgument().name("book").type(new GraphQLTypeReference("InputBook")))
+                                .dataFetcher(environment -> new BookRepository().updateBook( Book.fromMap(environment.getArgument("book")))))
                 ).build();
 
         return schema;

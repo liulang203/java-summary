@@ -44,7 +44,7 @@ public class AnnotationGraphQLTest {
         book.put("price", 1234L);
         Map<String, Object> params = new HashMap<>();
         params.put("book", book);
-        String query = "mutation($book: Book!){ insertBook ( book: $book) { id name price} }";
+        String query = "mutation mutation($book: InputBook!){ insertBook ( book: $book) { id name price} }";
         query(bookSchema, params, query);
     }
 
@@ -57,7 +57,7 @@ public class AnnotationGraphQLTest {
         book.put("price", 12134L);
         Map<String, Object> params = new HashMap<>();
         params.put("book", book);
-        String query = "mutation($book: Book!){ updateBook ( book: $book) { id name price} }";
+        String query = "mutation mutation($book: InputBook!){ updateBook ( book: $book) { id name price} }";
         query(bookSchema, params, query);
     }
 

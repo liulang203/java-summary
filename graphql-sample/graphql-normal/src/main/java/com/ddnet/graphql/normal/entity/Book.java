@@ -9,6 +9,7 @@ import lombok.Setter;
 import lombok.experimental.NonFinal;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Vinson.Ding on 2018/4/27.
@@ -31,5 +32,9 @@ public class Book {
     public void addAuthor(Author author) {
         authors.add(author);
         author.addBooks(this);
+    }
+
+    public static Book fromMap(Map<String, Object> book) {
+        return new Book((Long) book.get("id"), (String) book.get("name"), (long) book.get("price"), null);
     }
 }

@@ -65,7 +65,7 @@ public class BookRepository {
     public Book createBook(@NotNull Book book) {
         book.setId(idGenerator.getAndIncrement());
         books.add(book);
-        return null;
+        return book;
     }
 
     public Book updateBook(@NotNull Book book) {

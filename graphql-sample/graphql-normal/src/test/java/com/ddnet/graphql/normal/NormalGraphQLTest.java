@@ -43,7 +43,7 @@ public class NormalGraphQLTest {
         book.put("price", 1234L);
         Map<String, Object> params = new HashMap<>();
         params.put("book", book);
-        String query = "mutation($book: Book!){ insertBook ( book: $book) { id name price} }";
+        String query = "mutation BookMutation($book: InputBook!){ insertBook( book: $book){ id name price,authors{id name}}}";
         query(bookSchema, params, query);
     }
 
@@ -56,7 +56,7 @@ public class NormalGraphQLTest {
         book.put("price", 12134L);
         Map<String, Object> params = new HashMap<>();
         params.put("book", book);
-        String query = "mutation($book: Book!){ updateBook ( book: $book) { id name price} }";
+        String query = "mutation BookMutation($book: InputBook!){ updateBook ( book: $book) { id name price} }";
         query(bookSchema, params, query);
     }
 
