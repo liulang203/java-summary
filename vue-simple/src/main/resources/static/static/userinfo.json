@@ -1,0 +1,11 @@
+{
+  displayName: '',
+  phone: '',
+  email: '',
+  photoURL: '',
+  emailVerified: true,
+  uid: 'vinson',
+  track: {
+    record: []
+  }
+}
