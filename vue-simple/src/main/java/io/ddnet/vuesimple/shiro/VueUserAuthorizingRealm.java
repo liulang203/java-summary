@@ -3,6 +3,7 @@ package io.ddnet.vuesimple.shiro;
 import io.ddnet.vuesimple.domain.User;
 import io.ddnet.vuesimple.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -15,6 +16,8 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 
+import static io.ddnet.vuesimple.utils.PasswordUtils.PWD_HASH_NUMS;
+
 /**
  * Created by Vinson.Ding on 2018/5/14.
  */
@@ -23,13 +26,15 @@ import java.nio.charset.StandardCharsets;
 public class VueUserAuthorizingRealm extends AuthorizingRealm {
     @Autowired
     private UserRepository userRepository;
-    public VueUserAuthorizingRealm(){
+
+    public VueUserAuthorizingRealm() {
         setName("adminRealm");
         HashedCredentialsMatcher matcher = new HashedCredentialsMatcher("SHA-256");
         matcher.setStoredCredentialsHexEncoded(false);
-        matcher.setHashIterations(37);
+        matcher.setHashIterations(PWD_HASH_NUMS);
         setCredentialsMatcher(matcher);
     }
+
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         User user = (User) principals.fromRealm(getName()).iterator().next();
@@ -46,15 +51,15 @@ public class VueUserAuthorizingRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         String userName = ((UsernamePasswordToken) token).getUsername();
-        User user = userRepository.findByName(userName);
+        User user = userRepository.findByEmail(userName);
         if (user == null) {
             log.debug("user not be found[username={}]", userName);
         }
-        if (user != null) {
+        if (user != null && StringUtils.isNotEmpty(user.getName())) {
             String pwd = user.getPassword();
             SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(user, pwd, getName());
             info.setCredentialsSalt(
-                    ByteSource.Util.bytes(user.getName().getBytes(StandardCharsets.UTF_8)));
+                    ByteSource.Util.bytes(user.getEmail().getBytes(StandardCharsets.UTF_8)));
             return info;
         }
         return null;

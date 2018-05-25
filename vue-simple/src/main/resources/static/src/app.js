@@ -11,8 +11,8 @@
                 axios: "../static/axios/axios"
             },
             shim: {
-                promise:{
-                    exports:"Q"
+                promise: {
+                    exports: "Q"
                 },
                 'vue': {
                     exports: "Vue"
@@ -34,7 +34,17 @@
         let app = new Vue({
             el: '#app',
             store: store,
-            router: router
+            router: router,
+            components: {
+                "loading": {
+                    template: `<div v-if="show" class="globalMask">loading......</div>`,
+                    computed: {
+                        show: function () {
+                            return this.$store.state.showLoading;
+                        }
+                    }
+                }
+            }
         });
     });
 })(require, define);

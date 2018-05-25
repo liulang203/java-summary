@@ -25,6 +25,7 @@ public class ShiroConfig {
 
         chainDefinition.addPathDefinition("/authorize/**", "authc");
         chainDefinition.addPathDefinition("/admin/**", "authc");
+        chainDefinition.addPathDefinition("/logout", "logout");
 
         return chainDefinition;
     }

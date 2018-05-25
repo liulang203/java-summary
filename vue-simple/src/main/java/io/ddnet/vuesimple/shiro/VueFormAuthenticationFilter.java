@@ -1,6 +1,9 @@
 package io.ddnet.vuesimple.shiro;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Created by Vinson.Ding on 2018/5/14.
@@ -32,5 +36,30 @@ public class VueFormAuthenticationFilter extends FormAuthenticationFilter {
             ((HttpServletResponse) response).setStatus(HttpStatus.UNAUTHORIZED.value());
             return false;
         }
+    }
+
+    @Override
+    protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
+        log.info("user login fail");
+        log.error("", e);
+        try {
+            response.setContentType("application/json");
+            response.getWriter().write("{\"login\":false}");
+        } catch (IOException e1) {
+            log.error("", e1);
+        }
+        return false;
+    }
+
+    @Override
+    protected boolean onLoginSuccess(AuthenticationToken token, Subject subject, ServletRequest request, ServletResponse response) throws Exception {
+        log.info("user login secess");
+        try {
+            response.setContentType("application/json");
+            response.getWriter().write("{\"login\":true}");
+        } catch (IOException e1) {
+            log.error("", e1);
+        }
+        return false;
     }
 }

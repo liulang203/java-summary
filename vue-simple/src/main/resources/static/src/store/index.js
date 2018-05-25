@@ -11,15 +11,10 @@ define(function (require) {
         state: {
             userInfo: {
                 displayName: '',
-                phone: '',
                 email: '',
-                photoURL: '',
-                emailVerified: false,
-                uid: '',
-                track: {
-                    record: []
-                }
+                uid: ''
             },
+            showLoading:true,
             roles: [],
             permissions: []
         },

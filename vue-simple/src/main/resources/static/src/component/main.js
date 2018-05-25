@@ -1,18 +1,28 @@
 define(function (require) {
     authorize  = require("common/authorize");
     return {
-        data: function () {
-            return {
-                show: false
-            };
+        components:{
+            'v-head': require("component/head"),
+            'v-menu': require("component/menu"),
+            'v-body': require("component/body"),
         },
-        template: `<el-container>
-        <el-header>header</el-header>
+        template: `<el-container v-if="show">
+        <el-header><v-head></v-head></el-header>
         <el-container>
-            <el-aside>menu</el-aside>
-            <el-main>main</el-main>
+            <el-aside width="210px"><v-menu></v-menu></el-aside>
+            <el-main><router-view></router-view></el-main>
         </el-container>
     </el-container>`,
+        data: function () {
+            return {
+            };
+        },
+        computed: {
+            show: function() {
+                return ! this.$store.state.showLoading;
+            }
+        },
+
         created: function () {
             let vm = this;
             data = authorize.authorizeInfo();
