@@ -2,38 +2,69 @@ define(function (require) {
     authorize  = require("common/authorize");
     axios  = require("common/axios");
     return {
+
         template: `
-<el-menu default-active="1-4-1" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :collapse="isCollapse">
-  <el-submenu v-for="menu in menus" index="{{menu.id}}" >
+<el-menu default-active="1-4-1" class="el-menu-vertical-demo" 
+    router
+    @open="handleOpen" 
+    @close="handleClose" 
+    :collapse="isCollapse"
+    background-color="#545c64"
+    text-color="#fff"
+    active-text-color="#ffd04b">
+<template v-for="menu in menus">
+  <el-submenu v-if="menu.subMenus"  v-bind:index="menu.id" >
     <template slot="title">
-      <i class="el-icon-location"></i>
-      <span slot="title">{{menu.name}}</span>
+      <i v-if="menu.icon" v-bind:class="menu.icon"></i>
+      <span slot="title" v-text="menu.name"></span>
     </template>
-    <el-submenu v-for="submenu in menu.subMenus" index="submenu.id">
-      <span slot="title">选项4</span>
-      <el-menu-item index="1-4-1">选项1</el-menu-item>
-    </el-submenu>
-    <el-submenu index="1-5">
-      <span slot="title">选项5</span>
-          <el-submenu index="1-5-1">
-          <span slot="title">选项5-1</span>
-          <el-menu-item index="1-5-1-1">选项5-1-1</el-menu-item>
-        </el-submenu>
-    </el-submenu>
+    
+        <template v-for="menu2 in menu.subMenus">
+      <el-submenu v-if="menu2.subMenus"  v-bind:index="menu2.id" >
+        <template slot="title">
+          <i v-if="menu2.icon" v-bind:class="menu2.icon"></i>
+          <span slot="title" v-text="menu2.name"></span>
+        </template>
+        
+            <template v-for="menu3 in menu2.subMenus">
+          <el-submenu v-if="menu3.subMenus"  v-bind:index="menu3.id" >
+            <template slot="title">
+              <i v-if="menu3.icon" v-bind:class="menu3.icon"></i>
+              <span slot="title" v-text="menu3.name"></span>
+            </template>
+            
+            <template v-for="menu4 in menu3.subMenus">
+          <el-submenu v-if="menu4.subMenus"  v-bind:index="menu4.id" >
+            <template slot="title">
+              <i v-if="menu4.icon" v-bind:class="menu4.icon"></i>
+              <span slot="title" v-text="menu4.name"></span>
+            </template>
+          </el-submenu>
+           <el-menu-item :route="menu4.href" v-else :index="menu4.id">
+            <i v-if="menu4.icon" :class="menu4.icon"></i>
+            <span slot="title" v-text="menu4.name"></span>
+          </el-menu-item>
+          </template>
+            
+          </el-submenu>
+           <el-menu-item :route="menu3.href" v-else :index="menu3.id">
+            <i v-if="menu3.icon" :class="menu3.icon"></i>
+            <span slot="title" v-text="menu3.name"></span>
+          </el-menu-item>
+          </template>
+        
+      </el-submenu>
+       <el-menu-item :route="menu2.href" v-else :index="menu2.id">
+        <i v-if="menu2.icon" :class="menu2.icon"></i>
+        <span slot="title" v-text="menu2.name"></span>
+      </el-menu-item>
+      </template>
   </el-submenu>
-  
-  <el-menu-item index="2">
-    <i class="el-icon-menu"></i>
-    <span slot="title">导航二</span>
+   <el-menu-item :route="menu.href" v-else :index="menu.id">
+    <i v-if="menu.icon" :class="menu.icon"></i>
+    <span slot="title" v-text="menu.name"></span>
   </el-menu-item>
-  <el-menu-item index="3" disabled>
-    <i class="el-icon-document"></i>
-    <span slot="title">导航三</span>
-  </el-menu-item>
-  <el-menu-item index="4">
-    <i class="el-icon-setting"></i>
-    <span slot="title">导航四</span>
-  </el-menu-item>
+  </template>
 </el-menu>`,
         data: function () {
             return {
@@ -44,9 +75,6 @@ define(function (require) {
         computed: {
             show: function() {
                 return ''
-            },
-            menus:function () {
-
             }
         },
         mounted: function() {

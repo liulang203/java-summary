@@ -8,7 +8,15 @@ define(function ( require) {
                 {
                     path: "",
                     component: resolve => require(['component/body'],resolve)
-                }
+                },
+                {
+                    path: "user",
+                        component: resolve => require(['component/user'],resolve)
+                },
+    {
+        path: "*",
+            component: resolve => require(['component/4xxPage'],resolve)
+    }
             ]
         }, {
             path: "/login",

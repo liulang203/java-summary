@@ -38,7 +38,9 @@ public class MenuController {
                         new Menu("1-4",null,true,"其它管理",null,
                                 atherMenus)
                         )));
-        menus.add(new Menu("1","el-icon-document",true,"产品管理","/product",null));
+        menus.add(new Menu("2","el-icon-document",true,"产品管理","/product",null));
+
+        menus.add(new Menu("3","el-icon-document",true,"交易管理","/product",null));
         return menus;
     }
 }
