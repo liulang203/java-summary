@@ -13,6 +13,8 @@ define(
         if (res.status === 401 && res.config && !res.config.__isRetryRequest) {
             store.commit("logout");
             router.replace("/login");
+        } else if (res.status === 403){
+            router.replace("/noPermission");
         }
     });
         return axios;
